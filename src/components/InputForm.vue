@@ -1,26 +1,27 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <label for="birthday">태어난 년도</label>
-    <div class="input-group mb-3">
+  <div>
+    <label for="birthday">태어난 연도</label>
+    <div class="input-group mb-1">
       <input
         v-model="year"
         type="number"
         class="form-control"
-        placeholder="태어난 연도를 입력하세요."
-        aria-label="태어난 연도를 입력하세요."
+        placeholder="연도를 입력하세요."
+        aria-label="연도를 입력하세요."
         id="birthday"
         ref="birthday"
+        @keypress.enter="onAgeCaculate"
       />
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button" @click="onAgeCaculate">알아보기</button>
       </div>
     </div>
     <p class="error" v-if="!isYear">{{ yearErrorMessage }}</p>
-    <div class="form-group">
-      <label>당신의 나이는 :</label>
-      <span class="result" ref="result"></span>
-    </div>
-  </form>
+    <p class="p-2" v-show="isResult">
+      당신의 띠는
+      <span class="result text-primary" ref="result"></span> 띠입니다.
+    </p>
+  </div>
 </template>
 
 <script>
@@ -31,26 +32,43 @@ export default {
     return {
       year: "",
       isYear: true,
-      yearErrorMessage: "태어난 연도를 입력하세요"
+      yearErrorMessage: "태어난 연도를 입력하세요",
+      isResult: false
     };
   },
   methods: {
     onAgeCaculate() {
-      // let yearEl = document.getElementById("birthday");
-      // console.log(yearEl);
-      // console.log(this.$refs.birthday);
-      var birthYear = this.$refs.birthday.value;
-      if (!birthYear) {
+      let zodiac = new Array(
+        "원숭이",
+        "닭",
+        "개",
+        "돼지",
+        "쥐",
+        "소",
+        "호랑이",
+        "토끼",
+        "용",
+        "뱀",
+        "말",
+        "양"
+      );
+
+      let birthYear = this.$refs.birthday.value.replace(/(^0+)/, "");
+      if (!birthYear || birthYear <= 0) {
         // alert("태어난 연도를 입력하세요");
         this.isYear = false;
-        this.yearErrorMessage = "태어난 연도를 입력하세요.";
+        this.yearErrorMessage = "올바른 연도를 입력하세요.";
         this.$refs.birthday.focus();
       } else {
         this.isYear = true;
-        var today = new Date();
-        var nowYear = today.getFullYear();
-        var age = nowYear - birthYear + 1;
-        this.$refs.result.innerText = age;
+        // let today = new Date();
+        // let nowYear = today.getFullYear();
+        // let age = nowYear - birthYear + 1;
+        // this.$refs.result.innerText = age;
+        let i = birthYear % 12;
+        this.$refs.result.innerText = zodiac[i];
+        this.isResult = true;
+        // "당신의 띠는 '" + zodiac[i] + "' 띠 입니다.";
       }
     }
   }
@@ -60,5 +78,11 @@ export default {
 <style lang="scss" scoped>
 .result {
   margin-left: 5px;
+}
+.error {
+  margin-top: 5px;
+  padding-left: 15px;
+  font-size: 13px;
+  color: #dc4b3e;
 }
 </style>

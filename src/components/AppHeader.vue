@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1 class="h4">나의 나이는?</h1>
+    <h1 class="h4">나의 띠는?</h1>
   </header>
 </template>
 
